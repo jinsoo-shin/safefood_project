@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+
+<div id = "app">
+TEXT
+
+<router-view></router-view>	
+<br>
+	
+</div>
+
+
+</body>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+
+
+<script type = "x/template" id = "first-temp">
+	
+	<div>
+		<router-link to ="/third_param/:김선일">Third로!</router-link>
+		<button @click ="toThird('임꺽정')"> 이벤트로 호출! </button>
+	</div>
+
+</script>
+
+<script type = "x/template" id = "second-temp">
+	
+	<div>
+		{{$route.params.name}}
+		<router-link to ="/">First로!</router-link>
+	</div>
+
+</script>
+
+<script type="text/javascript">
+
+let first_comp = Vue.component("first",{
+	template : "#first-temp",
+	methods : {
+		toThird(name){
+			router.push("/third_param/"+name);
+		}
+	}
+	
+	
+})
+let second_comp = Vue.component("second",{
+	template : "#second-temp",
+mounted(){
+		
+		console.log("name : ", this.$route.params.name);
+		
+	}
+	
+	
+})
+
+
+let router = new VueRouter({
+	routes : [{ path : "/", component : first_comp},
+		{path : "/second", component:second_comp},
+		{path : "/third_param/:name", component:second_comp}]
+		
+})
+
+let vm = new Vue({
+	el : "#app",
+	router : router,
+	mounted(){
+		
+		console.log("name : ", this.$route.params.name);
+		
+	}
+	
+})
+
+
+</script>
+</html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+	<typeAliases>
+		<typeAlias type="com.ssafy.model.dto.FoodPageBean" alias="foodbean" />
+		<typeAlias type="com.ssafy.model.dto.Food" alias="food" />
+		<typeAlias type="com.ssafy.model.dto.User" alias="user"/>
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="mybatis/usermapper.xml" />
+		<mapper resource="mybatis/foodmapper.xml" />
+	</mappers>
+</configuration>

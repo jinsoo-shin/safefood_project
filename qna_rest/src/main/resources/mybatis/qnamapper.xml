@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.repository.QnaMapper"><!-- @Mapper의 정보 -->
+
+	<select id="select" resultType="qna" parameterType="bean">
+		select * from qnaboard
+		<where>
+			<if test="key!=null and key=='num'">num=#{word}</if>
+			<if test="key!=null and key=='title'">title like concat("%",#{word},"%")</if>
+			<if test="key!=null and key=='writer'">writer like concat("%",#{word},"%")</if>
+			<if test="key!=null and key=='password'">password=#{word}</if>
+
+		</where>
+		order by postdate desc
+	</select>
+	<insert id="insertPost" parameterType="qna">
+		insert into qnaboard
+		(num,title,writer,password,content)
+		values((select q.num from qnaboard
+		q order by num desc limit
+		1)+1,#{title},#{writer},#{password},#{content})
+	</insert>
+
+	<update id="updatePost" parameterType="qna">
+		update qnaboard set
+		title=#{title},content=#{content},count=#{count}
+		where writer=#{writer} and num=${num}
+	</update>
+
+	<delete id="deletePost" parameterType="Integer">
+		delete from qnaboard
+		where num=#{num}
+	</delete>
+</mapper>

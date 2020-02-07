@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.model.mapper.User">
+	
+
+	<insert id="insert" parameterType="user">
+		insert into user values(#{id},#{password}, #{name}, #{address},#{phone})
+	</insert>
+	<insert id="insertAllergy" parameterType="map">
+		insert into userallergy values(#{id}, #{allergy})
+	</insert>
+
+	<update id="update" parameterType="user">
+		update user set password=#{password},name=#{name}, address=#{address},
+		phone=#{phone} where id=#{id}
+	</update>
+	
+	<update id="updateAllergy" parameterType="map">
+		update userallergy set allergy=#{allergy} where id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="string">
+		delete from user where id=#{id}
+	</delete>
+	<delete id="deleteAllergy" parameterType="string">
+		delete from userallergy where id=#{id}
+	</delete>
+	
+	<select id="select" resultType="user" parameterType="string">
+		select * from user where id=#{id}
+	</select>
+	
+	<select id="selectAllergy" resultType="String">
+		select allergy from userallergy where id=#{id}
+	</select>
+</mapper>

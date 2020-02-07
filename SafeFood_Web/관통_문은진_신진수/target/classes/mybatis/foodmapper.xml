@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.model.mapper.Food">
+
+	<!-- 모든 food 검색 -->
+	<select id="selectAll" resultType="food">
+	<![CDATA[
+		select f.*,n.* from food f left join foodnutrition n on f.code=n.code
+	]]>
+	</select>
+	<!-- foodbean food 검색 -->
+	<select id="selectFoodBeanName" resultType="food"
+		parameterType="foodbean">
+		<![CDATA[
+		select f.*,n.* from food f left join foodnutrition n on f.code=n.code where name like concat('%',#{word},'%')
+		]]>
+	</select>
+	<select id="selectFoodBeanMaker" resultType="food"
+		parameterType="foodbean">
+		<![CDATA[
+		select f.*,n.* from food f left join foodnutrition n on f.code=n.code where maker like concat('%',#{word},'%')
+		]]>
+	</select>
+	<select id="selectFoodBeanMaterial" resultType="food"
+		parameterType="foodbean">
+		<![CDATA[
+		select f.*,n.* from food f left join foodnutrition n on f.code=n.code where material like concat('%',#{word},'%')
+		]]>
+	</select>
+
+	<!-- food 코드로 food 검색 -->
+	<select id="select" resultType="food">
+	<![CDATA[
+		select f.*,n.* from food f left join foodnutrition n on f.code=n.code where f.code=#{code}
+	]]>
+	</select>
+
+	<!-- food 코드로 food의 알레르기 정보 얻기 -->
+	<select id="selectAllergy" resultType="String"
+		parameterType="food">
+	<![CDATA[
+		select allergy from foodallergy where code=#{code}
+	]]>
+	</select>
+
+	<!--유저 아이디로 사용자가 먹은 food 삽입 -->
+	<insert id="insertUserEat" parameterType="map">
+	<![CDATA[
+		insert into usereat values (#{userId},#{foodCode})
+	]]>
+	</insert>
+
+	<!--유저 아이디로 사용자가 먹은 food 검색 foodcode가 반환된다 -->
+	<select id="selectUserEat" resultType="string"
+		parameterType="user">
+	<![CDATA[
+		select foodcode from usereat where id=#{id}
+	]]>
+	</select>
+	<!--유저 아이디와 코드로 있는지 보기 -->
+	<select id="selectIsUserEat" resultType="string"
+		parameterType="map">
+	<![CDATA[
+		select foodcode from usereat where id=#{userId} and foodcode=#{foodCode}
+	]]>
+	</select>
+
+	<!--유저 아이디로 사용자가 먹은 food 삭제 -->
+	<delete id="deleteUserEat" parameterType="map">
+	<![CDATA[
+		delete from usereat where id=#{userId} and foodcode=#{foodCode}
+	]]>
+	</delete>
+	<delete id="deleteUserEatAll" parameterType="string">
+	<![CDATA[
+		delete from usereat where id=#{userId}  
+	]]>
+	</delete>
+
+	<!-- 섭취 구현하기 !!!! -->
+	<!-- 없으면 추가하기,있으면 한개늘리기, 한개줄이기(update),줄였는데 0이면 delete, -->
+	<!--유저 아이디로 사용자가 먹은 food 삽입 -->
+	<select id="selectUserMoreEat" resultType="food" parameterType="map">
+		select foodcode code,count from usermoreeat where id=#{userId} and foodcode=#{foodCode} order by count desc
+	</select>
+	<select id="selectUserMoreEatByUser" resultType="food" parameterType="map">
+		select foodcode code,count from usermoreeat where id=#{userId} order by count desc
+	</select>
+	<insert id="insertUserMoreEat" parameterType="map">
+		<![CDATA[
+		insert into usermoreeat values(#{userId},#{foodCode},#{count})
+		]]>
+	</insert>
+	<update id="updateUserMoreEat" parameterType="map">
+	<![CDATA[
+		update usermoreeat set count=#{count} where id=#{userId} and foodcode=#{foodCode}
+	]]>
+	</update>
+	
+	<delete id="deleteUserMoreEat" parameterType="map">
+		delete from usermoreeat where id=#{userId} and foodcode=#{foodCode}
+	</delete>
+
+
+	<insert id="insertHit"  parameterType="map">
+		insert into foodhit (userid, foodname) values(#{userid},#{foodname})
+	</insert>
+
+	<update id="updateHit" parameterType="map">
+		update foodhit set hit=hit+1 where userid=#{userid} and foodname=#{foodname}
+	</update>
+
+	<select id="selectHit" resultType="String" parameterType="user">
+		select  foodname name, hit from foodhit where userid=#{id} order by hit desc limit 5
+	
+	</select>
+	<select id="selectUserHit" resultType="String" parameterType="map">
+		select  foodname name, hit from foodhit where userid=#{userid} and foodname=#{foodname}
+	
+	</select>
+
+
+</mapper>
